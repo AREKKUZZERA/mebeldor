@@ -118,21 +118,80 @@ nav.scrolled {
   display: flex; align-items: flex-end; padding: 0 4rem 8rem;
   overflow: visible;
   z-index: 1;
+  isolation: isolate;
+}
+.hero-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero-stage {
+  position: absolute;
+  inset: -2% -1.5% 0;
+  z-index: 0;
+  will-change: transform;
 }
 .hero-bg {
   position: absolute; inset: 0;
   background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1800&q=80');
-  background-size: cover; background-position: center 30%;
+  background-size: cover; background-position: center 34%;
+  filter: saturate(.95) contrast(1.04) brightness(.92);
 }
 .hero-bg::after {
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(
-    160deg,
-    rgba(10,9,5,.2) 0%,
-    rgba(10,9,5,.45) 40%,
-    rgba(10,9,5,.9) 100%
+    165deg,
+    rgba(10,9,5,.08) 0%,
+    rgba(10,9,5,.24) 24%,
+    rgba(10,9,5,.58) 62%,
+    rgba(10,9,5,.94) 100%
   );
+}
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(232,201,138,.18), transparent 32%),
+    radial-gradient(circle at 76% 18%, rgba(255,255,255,.10), transparent 28%),
+    linear-gradient(to bottom, rgba(10,9,5,.05), rgba(10,9,5,.34));
+}
+.hero-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(10px);
+  mix-blend-mode: screen;
+  opacity: .38;
+}
+.hero-orb-left {
+  top: 14%;
+  left: -6%;
+  width: 36vw;
+  height: 36vw;
+  min-width: 280px;
+  min-height: 280px;
+  background: radial-gradient(circle, rgba(232,201,138,.38) 0%, rgba(232,201,138,0) 68%);
+}
+.hero-orb-right {
+  right: -8%;
+  bottom: 12%;
+  width: 28vw;
+  height: 28vw;
+  min-width: 220px;
+  min-height: 220px;
+  background: radial-gradient(circle, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 70%);
+  opacity: .24;
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(245,237,224,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,237,224,.04) 1px, transparent 1px);
+  background-size: 100% 100px, 100px 100%;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 78%);
+  opacity: .18;
 }
 .hero-content {
   position: relative; z-index: 2;
@@ -723,6 +782,7 @@ body::before {
   .nav-burger { display: flex; }
   section { padding: 5rem 1.5rem; }
   #hero { padding: 0 1.5rem 5rem; }
+  .hero-stage { inset: -1% -6% 0; }
   .hero-scroll { right: 1.5rem; }
   .hero-scroll-track { height: 110px; }
   #stats { padding: 3rem 1.5rem; grid-template-columns: repeat(2,1fr); }
