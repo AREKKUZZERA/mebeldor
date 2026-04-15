@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>МебельДор — Мебель на заказ из массива дерева</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #0a0905;
+      --dark:    #131009;
+      --card:    #1a1610;
+      --border:  rgba(201,169,110,0.18);
+      --gold:    #c9a96e;
+      --gold2:   #e8c98a;
+      --cream:   #f5ede0;
+      --muted:   rgba(245,237,224,0.45);
+      --ff-serif: 'Cormorant Garamond', Georgia, serif;
+      --ff-sans:  'DM Sans', sans-serif;
+      --ease:    cubic-bezier(.25,.46,.45,.94);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: var(--ff-sans);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      width: 10px; height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%,-50%);
+      transition: width .3s var(--ease), height .3s var(--ease), background .3s;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed; top: 0; left: 0; z-index: 9998;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(201,169,110,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%,-50%);
+      transition: transform .12s var(--ease), width .3s var(--ease), height .3s var(--ease);
+    }
+    body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.6rem 4rem;
+      transition: background .4s var(--ease), backdrop-filter .4s, padding .4s;
+    }
+    nav.scrolled {
+      background: rgba(10,9,5,.88);
+      backdrop-filter: blur(18px);
+      padding: 1rem 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--ff-serif);
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: .06em;
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: .8rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .25s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+    .nav-cta {
+      font-family: var(--ff-sans);
+      font-size: .75rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      border: none;
+      padding: .65rem 1.6rem;
+      cursor: none;
+      transition: background .25s, transform .2s;
+    }
+    .nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
+    .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; }
+    .nav-burger span { width: 24px; height: 1px; background: var(--cream); transition: .3s; }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative; height: 100vh; min-height: 680px;
+      display: flex; align-items: flex-end; padding: 0 4rem 8rem;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1800&q=80');
+      background-size: cover; background-position: center 30%;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(10,9,5,.2) 0%,
+        rgba(10,9,5,.45) 40%,
+        rgba(10,9,5,.9) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 760px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .6rem;
+      border: 1px solid var(--border);
+      padding: .4rem 1rem;
+      font-size: .72rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .8s .2s var(--ease) forwards;
+    }
+    .hero-badge::before { content: ''; width: 20px; height: 1px; background: var(--gold); }
+    h1.hero-title {
+      font-family: var(--ff-serif);
+      font-size: clamp(3rem, 6.5vw, 6rem);
+      font-weight: 300;
+      line-height: 1.06;
+      letter-spacing: -.01em;
+      color: var(--cream);
+      margin-bottom: 1.6rem;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeUp .9s .4s var(--ease) forwards;
+    }
+    h1.hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 2.8rem;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .8s .6s var(--ease) forwards;
+    }
+    .hero-actions {
+      display: flex; gap: 1.2rem; flex-wrap: wrap;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .8s .8s var(--ease) forwards;
+    }
+    .btn-primary {
+      font-family: var(--ff-sans);
+      font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+      background: var(--gold); color: var(--black);
+      border: none; padding: 1rem 2.4rem; cursor: none;
+      transition: background .25s, transform .2s, box-shadow .25s;
+    }
+    .btn-primary:hover {
+      background: var(--gold2);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(201,169,110,.25);
+    }
+    .btn-outline {
+      font-family: var(--ff-sans);
+      font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+      background: transparent; color: var(--cream);
+      border: 1px solid rgba(245,237,224,.3);
+      padding: 1rem 2.4rem; cursor: none;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: .6rem;
+      transition: border-color .25s, color .25s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .hero-scroll {
+      position: absolute; right: 4rem; bottom: 4rem;
+      display: flex; flex-direction: column; align-items: center; gap: .8rem;
+      opacity: 0; animation: fadeUp .8s 1.2s var(--ease) forwards;
+    }
+    .hero-scroll span {
+      font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollLine 2s 1.5s infinite;
+    }
+    @keyframes scrollLine {
+      0% { height: 60px; opacity: 1; }
+      100% { height: 0; opacity: 0; }
+    }
+
+    /* ── STATS ── */
+    #stats {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 1px;
+    }
+    .stat-item {
+      padding: 2rem 2.5rem;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--ff-serif);
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: .6rem;
+      display: block;
+    }
+
+    /* ── SECTIONS COMMON ── */
+    section { padding: 8rem 4rem; }
+    .section-tag {
+      font-size: .7rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .section-tag::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+    h2.section-title {
+      font-family: var(--ff-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--cream);
+    }
+    h2.section-title em { font-style: italic; color: var(--gold); }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+
+    /* ── ADVANTAGES ── */
+    #advantages { background: var(--black); }
+    .advantages-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 1px;
+      border: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    .adv-card {
+      padding: 3rem 2.2rem;
+      border-right: 1px solid var(--border);
+      transition: background .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .adv-card:last-child { border-right: none; }
+    .adv-card::before {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transform: scaleX(0);
+      transition: transform .4s var(--ease);
+    }
+    .adv-card:hover { background: rgba(201,169,110,.04); }
+    .adv-card:hover::before { transform: scaleX(1); }
+    .adv-icon {
+      width: 48px; height: 48px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.8rem;
+      color: var(--gold);
+      font-size: 1.4rem;
+    }
+    .adv-title {
+      font-family: var(--ff-serif);
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: .8rem;
+    }
+    .adv-text {
+      font-size: .85rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ── CATALOG ── */
+    #catalog { background: var(--dark); }
+    .catalog-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 4rem;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+    }
+    .cat-card {
+      position: relative; overflow: hidden;
+      aspect-ratio: 4/3;
+      cursor: none;
+    }
+    .cat-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .7s var(--ease);
+    }
+    .cat-card:hover img { transform: scale(1.06); }
+    .cat-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,9,5,.85) 0%, rgba(10,9,5,.1) 55%);
+      transition: background .4s;
+    }
+    .cat-card:hover .cat-overlay {
+      background: linear-gradient(to top, rgba(10,9,5,.9) 0%, rgba(10,9,5,.2) 55%);
+    }
+    .cat-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 2.5rem;
+      transform: translateY(8px);
+      transition: transform .4s var(--ease);
+    }
+    .cat-card:hover .cat-content { transform: translateY(0); }
+    .cat-tag {
+      font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: .6rem;
+    }
+    .cat-name {
+      font-family: var(--ff-serif);
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: .4rem;
+    }
+    .cat-desc {
+      font-size: .8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      max-height: 0; overflow: hidden;
+      transition: max-height .4s var(--ease), opacity .4s;
+      opacity: 0;
+    }
+    .cat-card:hover .cat-desc { max-height: 60px; opacity: 1; }
+    .cat-arrow {
+      position: absolute; top: 2rem; right: 2rem;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(201,169,110,.3);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 1.1rem;
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity .3s, transform .3s, border-color .3s;
+    }
+    .cat-card:hover .cat-arrow { opacity: 1; transform: translateY(0); }
+
+    /* ── PROCESS ── */
+    #process { background: var(--black); }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(5,1fr);
+      gap: 0;
+      margin-top: 4rem;
+      position: relative;
+    }
+    .process-grid::before {
+      content: '';
+      position: absolute;
+      top: 2.3rem; left: 5%; right: 5%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), var(--gold), var(--border), transparent);
+    }
+    .process-step {
+      text-align: center;
+      padding: 0 1.5rem;
+      padding-top: 0;
+    }
+    .step-num {
+      width: 46px; height: 46px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-serif);
+      font-size: 1.1rem; color: var(--gold);
+      margin: 0 auto 2rem;
+      background: var(--black);
+      position: relative; z-index: 1;
+      transition: background .3s, color .3s;
+    }
+    .process-step:hover .step-num { background: var(--gold); color: var(--black); }
+    .step-title {
+      font-family: var(--ff-serif);
+      font-size: 1.1rem; font-weight: 400;
+      color: var(--cream);
+      margin-bottom: .6rem;
+    }
+    .step-text { font-size: .78rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--dark); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      grid-template-rows: auto;
+      gap: 1.5px;
+      margin-top: 4rem;
+    }
+    .gallery-item {
+      overflow: hidden; position: relative;
+      cursor: none;
+    }
+    .gallery-item:nth-child(1) { grid-column: span 2; aspect-ratio: 16/9; }
+    .gallery-item:nth-child(2) { aspect-ratio: 3/4; }
+    .gallery-item:nth-child(3) { aspect-ratio: 4/3; }
+    .gallery-item:nth-child(4) { aspect-ratio: 4/3; }
+    .gallery-item:nth-child(5) { grid-column: span 2; aspect-ratio: 16/9; }
+    .gallery-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .7s var(--ease), filter .5s;
+      filter: brightness(.9);
+    }
+    .gallery-item:hover img { transform: scale(1.05); filter: brightness(1); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: rgba(201,169,110,0);
+      transition: background .4s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-item:hover .gallery-overlay { background: rgba(201,169,110,.08); }
+    .gallery-plus {
+      width: 50px; height: 50px;
+      border: 1px solid var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; color: var(--cream);
+      opacity: 0; transform: scale(.7);
+      transition: opacity .3s, transform .3s;
+    }
+    .gallery-item:hover .gallery-plus { opacity: 1; transform: scale(1); }
+
+    /* ── REVIEWS ── */
+    #reviews { background: var(--black); }
+    .reviews-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+    .reviews-info { padding-top: 1rem; }
+    .trust-numbers { margin-top: 3rem; display: flex; flex-direction: column; gap: 2rem; }
+    .trust-item {}
+    .trust-num {
+      font-family: var(--ff-serif);
+      font-size: 3rem; color: var(--gold); font-weight: 300; line-height: 1;
+    }
+    .trust-label { font-size: .78rem; letter-spacing: .1em; color: var(--muted); margin-top: .3rem; }
+    .reviews-slider { position: relative; }
+    .review-cards { display: flex; flex-direction: column; gap: 1.5px; }
+    .review-card {
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      background: var(--card);
+      transition: border-color .3s, background .3s;
+      position: relative;
+    }
+    .review-card:hover { border-color: rgba(201,169,110,.4); background: rgba(201,169,110,.03); }
+    .review-card::before {
+      content: '"';
+      font-family: var(--ff-serif);
+      font-size: 6rem;
+      color: var(--gold);
+      opacity: .12;
+      position: absolute; top: .5rem; left: 1.5rem;
+      line-height: 1;
+    }
+    .review-text { font-size: .9rem; line-height: 1.8; color: var(--muted); margin-bottom: 1.5rem; }
+    .review-author { display: flex; align-items: center; gap: 1rem; }
+    .review-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-serif); font-size: 1rem; color: var(--gold);
+      border: 1px solid var(--border);
+    }
+    .review-name { font-family: var(--ff-serif); font-size: 1rem; color: var(--cream); }
+    .review-date { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+    .review-stars { display: flex; gap: .2rem; margin-bottom: 1rem; }
+    .star { color: var(--gold); font-size: .85rem; }
+
+    /* ── CTA ── */
+    #cta {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 8rem 4rem;
+    }
+    .cta-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .cta-text .section-tag { margin-bottom: 1.2rem; }
+    .cta-title {
+      font-family: var(--ff-serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+    }
+    .cta-title em { font-style: italic; color: var(--gold); }
+    .cta-sub { font-size: .9rem; color: var(--muted); line-height: 1.7; }
+    .cta-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-field { position: relative; }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      font-family: var(--ff-sans);
+      font-size: .85rem;
+      padding: 1rem 1.2rem;
+      outline: none;
+      transition: border-color .25s, background .25s;
+      -webkit-appearance: none;
+    }
+    .form-field select { cursor: none; }
+    .form-field textarea { height: 100px; resize: none; }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+      border-color: var(--gold);
+      background: rgba(201,169,110,.04);
+    }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(245,237,224,.3); }
+    .form-field select option { background: var(--dark); }
+    .form-submit {
+      font-family: var(--ff-sans);
+      font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+      background: var(--gold); color: var(--black);
+      border: none; padding: 1.1rem 2rem; cursor: none;
+      transition: background .25s, transform .2s, box-shadow .25s;
+      display: flex; align-items: center; justify-content: center; gap: .8rem;
+    }
+    .form-submit:hover {
+      background: var(--gold2);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(201,169,110,.2);
+    }
+    .form-note { font-size: .72rem; color: var(--muted); text-align: center; }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+      border: 1px solid var(--gold);
+      background: rgba(201,169,110,.05);
+    }
+    .form-success h3 {
+      font-family: var(--ff-serif);
+      font-size: 1.5rem; color: var(--gold);
+      margin-bottom: .8rem;
+    }
+    .form-success p { font-size: .85rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 5rem 4rem 3rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .footer-brand .nav-logo { font-size: 1.6rem; display: block; margin-bottom: 1rem; }
+    .footer-desc { font-size: .82rem; color: var(--muted); line-height: 1.7; }
+    .footer-col-title {
+      font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: .8rem; list-style: none; }
+    .footer-links a { font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .25s; }
+    .footer-links a:hover { color: var(--cream); }
+    .footer-contact { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-item { display: flex; flex-direction: column; gap: .2rem; }
+    .contact-label { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); }
+    .contact-value { font-size: .85rem; color: var(--cream); text-decoration: none; transition: color .25s; }
+    .contact-value:hover { color: var(--gold); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-copy { font-size: .72rem; color: var(--muted); }
+    .footer-social { display: flex; gap: 1rem; }
+    .social-btn {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: .85rem;
+      text-decoration: none; cursor: none;
+      transition: border-color .25s, color .25s;
+    }
+    .social-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 9990;
+      pointer-events: none;
+      opacity: .025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+
+    /* ── MOBILE NAV PANEL ── */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 99;
+      background: var(--dark);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2.5rem;
+      transform: translateX(100%);
+      transition: transform .4s var(--ease);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+    .mobile-menu a {
+      font-family: var(--ff-serif);
+      font-size: 2rem; font-weight: 300;
+      color: var(--cream); text-decoration: none;
+      letter-spacing: .04em;
+      transition: color .25s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-close {
+      position: absolute; top: 2rem; right: 2rem;
+      background: none; border: none; color: var(--cream);
+      font-size: 1.5rem; cursor: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      #stats { grid-template-columns: repeat(2,1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .advantages-grid { grid-template-columns: repeat(2,1fr); }
+      .adv-card:nth-child(2) { border-right: none; }
+      .process-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+      .process-grid::before { display: none; }
+      .cta-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav.scrolled { padding: 1rem 1.5rem; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-burger { display: flex; }
+      section { padding: 5rem 1.5rem; }
+      #hero { padding: 0 1.5rem 5rem; }
+      .hero-scroll { right: 1.5rem; }
+      #stats { padding: 3rem 1.5rem; grid-template-columns: repeat(2,1fr); }
+      .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .advantages-grid { grid-template-columns: 1fr; }
+      .adv-card { border-right: none; border-bottom: 1px solid var(--border); }
+      .catalog-grid { grid-template-columns: 1fr; }
+      .catalog-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item:nth-child(1),
+      .gallery-item:nth-child(5) { grid-column: span 1; }
+      .reviews-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 1.5rem; }
+      #cta { padding: 5rem 1.5rem; }
+      footer { padding: 4rem 1.5rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" aria-label="Закрыть">✕</button>
+  <a href="#advantages" onclick="closeMobile()">О нас</a>
+  <a href="#catalog" onclick="closeMobile()">Каталог</a>
+  <a href="#process" onclick="closeMobile()">Как работаем</a>
+  <a href="#gallery" onclick="closeMobile()">Работы</a>
+  <a href="#reviews" onclick="closeMobile()">Отзывы</a>
+  <a href="#cta" onclick="closeMobile()">Заявка</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Мебель<span>Дор</span></a>
+  <ul class="nav-links">
+    <li><a href="#advantages">О нас</a></li>
+    <li><a href="#catalog">Каталог</a></li>
+    <li><a href="#process">Как работаем</a></li>
+    <li><a href="#gallery">Работы</a></li>
+    <li><a href="#reviews">Отзывы</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Рассчитать</button>
+  <button class="nav-burger" id="burgerBtn" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Массив дерева · Ногинск · с 2003 года</div>
+    <h1 class="hero-title">Мебель на заказ<br/>под <em>ваш</em> интерьер</h1>
+    <p class="hero-sub">Индивидуальный дизайн, собственное производство и бесплатный замер. Создаём кухни, шкафы и гардеробные, которые живут вместе с вами.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Рассчитать стоимость</button>
+      <a href="#catalog" class="btn-outline">Смотреть работы <span>↓</span></a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stat-item reveal">
+    <span class="stat-num" data-count="20">0</span>
+    <span class="stat-label">лет на рынке</span>
+  </div>
+  <div class="stat-item reveal reveal-delay-1">
+    <span class="stat-num" data-count="1200">0</span>
+    <span class="stat-label">проектов выполнено</span>
+  </div>
+  <div class="stat-item reveal reveal-delay-2">
+    <span class="stat-num" data-count="25">0</span>
+    <span class="stat-label">дней — срок изготовления</span>
+  </div>
+  <div class="stat-item reveal reveal-delay-3">
+    <span class="stat-num">0 ₽</span>
+    <span class="stat-label">замер и дизайн-проект</span>
+  </div>
+</div>
+
+<!-- ADVANTAGES -->
+<section id="advantages">
+  <div class="section-tag reveal">Почему выбирают нас</div>
+  <h2 class="section-title reveal">Ваш комфорт —<br/>наш <em>приоритет</em></h2>
+  <div class="advantages-grid">
+    <div class="adv-card reveal">
+      <div class="adv-icon">✦</div>
+      <div class="adv-title">Индивидуальный дизайн</div>
+      <p class="adv-text">Каждый проект разрабатывается с нуля под ваше пространство. Никаких шаблонов — только ваши параметры, стиль и образ жизни.</p>
+    </div>
+    <div class="adv-card reveal reveal-delay-1">
+      <div class="adv-icon">⬡</div>
+      <div class="adv-title">Бесплатный замер</div>
+      <p class="adv-text">Выезд специалиста в любой день недели, в удобное для вас время. Замер, дизайн, доставка, подъём и установка — в стоимость включены.</p>
+    </div>
+    <div class="adv-card reveal reveal-delay-2">
+      <div class="adv-icon">◈</div>
+      <div class="adv-title">Собственное производство</div>
+      <p class="adv-text">Высокотехнологичное оборудование по деревообработке. Контроль качества на каждом этапе — от заготовки до финишного покрытия.</p>
+    </div>
+    <div class="adv-card reveal reveal-delay-3">
+      <div class="adv-icon">◇</div>
+      <div class="adv-title">Гарантия и экология</div>
+      <p class="adv-text">Все материалы сертифицированы. Финальная цена называется сразу и не меняется. Гарантия на все изделия — 2 года.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<section id="catalog">
+  <div class="catalog-header">
+    <div>
+      <div class="section-tag reveal">Что мы делаем</div>
+      <h2 class="section-title reveal">Каталог <em>изделий</em></h2>
+    </div>
+    <a href="#cta" class="btn-outline reveal" style="align-self:flex-end">Заказать проект</a>
+  </div>
+  <div class="catalog-grid">
+    <div class="cat-card reveal">
+      <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=900&q=80" alt="Кухни на заказ" loading="lazy" />
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <div class="cat-tag">01 / Кухни</div>
+        <div class="cat-name">Кухни на заказ</div>
+        <div class="cat-desc">Из массива дерева, МДФ или пластика. Любые размеры и конфигурации. Встроенная техника, островные решения.</div>
+      </div>
+    </div>
+    <div class="cat-card reveal reveal-delay-1">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Шкафы-купе" loading="lazy" />
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <div class="cat-tag">02 / Шкафы</div>
+        <div class="cat-name">Шкафы-купе</div>
+        <div class="cat-desc">Встроенные и корпусные. Зеркальные фасады, матовое стекло, натуральный шпон. Оптимальное использование пространства.</div>
+      </div>
+    </div>
+    <div class="cat-card reveal reveal-delay-2">
+      <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=900&q=80" alt="Гардеробные" loading="lazy" />
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <div class="cat-tag">03 / Гардеробные</div>
+        <div class="cat-name">Гардеробные</div>
+        <div class="cat-desc">Системы хранения любой сложности. Открытые полки, ящики, штанги, подсветка — полная персонализация.</div>
+      </div>
+    </div>
+    <div class="cat-card reveal reveal-delay-3">
+      <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&q=80" alt="Детская мебель" loading="lazy" />
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <div class="cat-tag">04 / Детская</div>
+        <div class="cat-name">Детская мебель</div>
+        <div class="cat-desc">Безопасные экологичные материалы. Кровати, столы, стеллажи. Продуманные решения для роста ребёнка.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-tag reveal">Путь к вашей мебели</div>
+  <h2 class="section-title reveal">Как мы <em>работаем</em></h2>
+  <div class="process-grid">
+    <div class="process-step reveal">
+      <div class="step-num">1</div>
+      <div class="step-title">Заявка</div>
+      <p class="step-text">Оставляете заявку онлайн или звоните. Менеджер связывается в течение 1 часа для уточнения деталей.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-num">2</div>
+      <div class="step-title">Замер</div>
+      <p class="step-text">Выезжаем бесплатно в удобное время. Снимаем точные размеры, консультируем по материалам.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-num">3</div>
+      <div class="step-title">Дизайн</div>
+      <p class="step-text">Создаём 3D-визуализацию с учётом ваших пожеланий. Вносим правки до полного согласования.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-num">4</div>
+      <div class="step-title">Производство</div>
+      <p class="step-text">Изготавливаем на собственном оборудовании. Срок от 25 дней. Фото-отчёт в процессе.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-4">
+      <div class="step-num">5</div>
+      <div class="step-title">Установка</div>
+      <p class="step-text">Доставляем и устанавливаем в удобный день, включая выходные. Демонтаж упаковки включён.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem">
+    <div>
+      <div class="section-tag reveal">Галерея работ</div>
+      <h2 class="section-title reveal">Наши <em>проекты</em></h2>
+    </div>
+    <a href="#cta" class="btn-outline reveal">Хочу так же</a>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1000&q=80" alt="Кухня из массива" loading="lazy" />
+      <div class="gallery-overlay"><div class="gallery-plus">+</div></div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-1">
+      <img src="https://images.unsplash.com/photo-1616048056617-93b94a339009?w=600&q=80" alt="Шкаф на заказ" loading="lazy" />
+      <div class="gallery-overlay"><div class="gallery-plus">+</div></div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-2">
+      <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80" alt="Гостиная мебель" loading="lazy" />
+      <div class="gallery-overlay"><div class="gallery-plus">+</div></div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-3">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Спальный гарнитур" loading="lazy" />
+      <div class="gallery-overlay"><div class="gallery-plus">+</div></div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-4">
+      <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1000&q=80" alt="Гардеробная" loading="lazy" />
+      <div class="gallery-overlay"><div class="gallery-plus">+</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reviews-layout">
+    <div class="reviews-info">
+      <div class="section-tag reveal">Говорят клиенты</div>
+      <h2 class="section-title reveal">Отзывы и <em>доверие</em></h2>
+      <div class="trust-numbers">
+        <div class="trust-item reveal">
+          <div class="trust-num">20+</div>
+          <div class="trust-label">лет мы создаём мебель для домов Подмосковья</div>
+        </div>
+        <div class="trust-item reveal reveal-delay-1">
+          <div class="trust-num">1200+</div>
+          <div class="trust-label">довольных семей, которые заказывают снова</div>
+        </div>
+        <div class="trust-item reveal reveal-delay-2">
+          <div class="trust-num">98%</div>
+          <div class="trust-label">клиентов рекомендуют нас друзьям</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-cards">
+      <div class="review-card reveal">
+        <div class="review-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="review-text">После ремонта нам нужно было подбирать мебель. Обратились в МебельДор и не пожалели. Кухня получилась именно такой, о которой мечтали — всё под размер, красиво и надёжно. Замерщик приехал в удобное время, дизайнер всё учёл. Рекомендую!</p>
+        <div class="review-author">
+          <div class="review-avatar">Е</div>
+          <div>
+            <div class="review-name">Елена Смирнова</div>
+            <div class="review-date">Ногинск, кухня из массива</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal reveal-delay-1">
+        <div class="review-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="review-text">Заказывали кухню и не пожалели. Хотели что-то оригинальное — качественно и без лишнего. Итог превзошёл ожидания: всё чётко в срок, установка прошла аккуратно. Цена осталась той, что назвали изначально.</p>
+        <div class="review-author">
+          <div class="review-avatar">А</div>
+          <div>
+            <div class="review-name">Аркадий Владимирович</div>
+            <div class="review-date">Электросталь, кухня + остров</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal reveal-delay-2">
+        <div class="review-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="review-text">Заказали шкаф-купе во всю стену. Приятно удивил профессионализм дизайнера — предложил решения, о которых мы сами не думали. Производство заняло 3 недели. Результат отличный, очень рекомендую.</p>
+        <div class="review-author">
+          <div class="review-avatar">М</div>
+          <div>
+            <div class="review-name">Марина и Дмитрий</div>
+            <div class="review-date">Балашиха, шкаф-купе 4.2 м</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="cta-text">
+      <div class="section-tag reveal">Начните сейчас</div>
+      <h2 class="cta-title reveal">Оставьте заявку —<br/>расчёт за <em>1 день</em></h2>
+      <p class="cta-sub reveal">Укажите тип мебели и размеры — мы перезвоним, уточним детали и пришлём предварительную смету бесплатно. Никаких обязательств.</p>
+      <div style="margin-top:2.5rem" class="reveal reveal-delay-1">
+        <div style="display:flex;flex-direction:column;gap:.8rem">
+          <div style="display:flex;align-items:center;gap:.8rem">
+            <span style="color:var(--gold);font-size:.9rem">✓</span>
+            <span style="font-size:.82rem;color:var(--muted)">Замер, дизайн и доставка — бесплатно</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem">
+            <span style="color:var(--gold);font-size:.9rem">✓</span>
+            <span style="font-size:.82rem;color:var(--muted)">Цена фиксируется в договоре</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem">
+            <span style="color:var(--gold);font-size:.9rem">✓</span>
+            <span style="font-size:.82rem;color:var(--muted)">Гарантия 2 года на все изделия</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem">
+            <span style="color:var(--gold);font-size:.9rem">✓</span>
+            <span style="font-size:.82rem;color:var(--muted)">Срок изготовления от 25 дней</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div id="formWrap">
+        <form class="cta-form" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="form-field">
+              <input type="text" placeholder="Ваше имя" required />
+            </div>
+            <div class="form-field">
+              <input type="tel" placeholder="Телефон" required />
+            </div>
+          </div>
+          <div class="form-field">
+            <select required>
+              <option value="" disabled selected>Тип мебели</option>
+              <option>Кухня на заказ</option>
+              <option>Шкаф-купе</option>
+              <option>Гардеробная</option>
+              <option>Детская мебель</option>
+              <option>Корпусная мебель</option>
+              <option>Другое</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <textarea placeholder="Ваши пожелания / размеры помещения (необязательно)"></textarea>
+          </div>
+          <button type="submit" class="form-submit">
+            Получить расчёт бесплатно
+            <span>→</span>
+          </button>
+          <p class="form-note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
+        </form>
+      </div>
+      <div class="form-success" id="formSuccess">
+        <h3>Заявка принята!</h3>
+        <p>Мы свяжемся с вами в течение 1 часа и пришлём предварительный расчёт. Спасибо за доверие.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Мебель<span>Дор</span></a>
+      <p class="footer-desc">Производство мебели из массива дерева на заказ с 2003 года. Собственное оборудование, профессиональные дизайнеры, честные цены.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Навигация</div>
+      <ul class="footer-links">
+        <li><a href="#advantages">О компании</a></li>
+        <li><a href="#catalog">Каталог</a></li>
+        <li><a href="#process">Как работаем</a></li>
+        <li><a href="#gallery">Галерея</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Мебель</div>
+      <ul class="footer-links">
+        <li><a href="#catalog">Кухни на заказ</a></li>
+        <li><a href="#catalog">Шкафы-купе</a></li>
+        <li><a href="#catalog">Гардеробные</a></li>
+        <li><a href="#catalog">Детская мебель</a></li>
+        <li><a href="#catalog">Корпусная мебель</a></li>
+      </ul>
+    </div>
+    <div class="footer-contact">
+      <div class="footer-col-title">Контакты</div>
+      <div class="contact-item">
+        <span class="contact-label">Телефон</span>
+        <a href="tel:+79167540337" class="contact-value">+7 (916) 754-03-37</a>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Email</span>
+        <a href="mailto:info@mebel-dor.ru" class="contact-value">info@mebel-dor.ru</a>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Адрес</span>
+        <span class="contact-value">г. Ногинск, ул. Пугачёва, 1а</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Режим работы</span>
+        <span class="contact-value">Пн–Вс, 9:00 – 20:00</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">ООО «МебельДор» © 2003–2025. Все права защищены.</span>
+    <div class="footer-social">
+      <a href="#" class="social-btn" aria-label="ВКонтакте">В</a>
+      <a href="#" class="social-btn" aria-label="Telegram">T</a>
+      <a href="#" class="social-btn" aria-label="WhatsApp">W</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Nav scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Counter animation
+  function animateCount(el, target, suffix='') {
+    let start = 0, duration = 1800;
+    let startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      let progress = Math.min((ts - startTime) / duration, 1);
+      let val = Math.floor(progress * target);
+      el.textContent = val.toLocaleString('ru') + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  const countObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const el = e.target;
+        const target = parseInt(el.dataset.count);
+        const suffix = el.textContent.includes('+') || parseInt(el.dataset.count) > 100 ? '+' : '';
+        animateCount(el, target, suffix);
+        countObs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+  // Mobile menu
+  const mobileMenu = document.getElementById('mobileMenu');
+  document.getElementById('burgerBtn').addEventListener('click', () => mobileMenu.classList.add('open'));
+  document.getElementById('mobileClose').addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function closeMobile() { mobileMenu.classList.remove('open'); }
+
+  // Form submit
+  function submitForm(e) {
+    e.preventDefault();
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>

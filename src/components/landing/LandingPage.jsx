@@ -1,0 +1,86 @@
+import { useState } from "react";
+import {
+  advantages,
+  catalogItems,
+  contacts,
+  ctaBenefits,
+  footerColumns,
+  furnitureTypes,
+  galleryItems,
+  mobileNavigationLinks,
+  navigationLinks,
+  processSteps,
+  reviews,
+  socialLinks,
+  stats,
+  trustMetrics,
+} from "../../content/landingData";
+import { useLandingEffects } from "../../hooks/useLandingEffects";
+import AdvantagesSection from "./AdvantagesSection";
+import CatalogSection from "./CatalogSection";
+import CtaSection from "./CtaSection";
+import CursorLayer from "./CursorLayer";
+import FooterSection from "./FooterSection";
+import GallerySection from "./GallerySection";
+import HeroSection from "./HeroSection";
+import MobileMenu from "./MobileMenu";
+import Navbar from "./Navbar";
+import ProcessSection from "./ProcessSection";
+import ReviewsSection from "./ReviewsSection";
+import StatsSection from "./StatsSection";
+
+function LandingPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+  useLandingEffects();
+
+  const scrollToCta = () => {
+    document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    setIsFormSubmitted(true);
+  };
+
+  return (
+    <div className="landing-shell">
+      <CursorLayer />
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        links={mobileNavigationLinks}
+        onClose={closeMobileMenu}
+      />
+      <Navbar
+        links={navigationLinks}
+        onOpenMenu={() => setIsMobileMenuOpen(true)}
+        onScrollToCta={scrollToCta}
+      />
+      <HeroSection onScrollToCta={scrollToCta} />
+      <StatsSection stats={stats} />
+      <AdvantagesSection advantages={advantages} />
+      <CatalogSection items={catalogItems} />
+      <ProcessSection steps={processSteps} />
+      <GallerySection items={galleryItems} />
+      <ReviewsSection trustMetrics={trustMetrics} reviews={reviews} />
+      <CtaSection
+        benefits={ctaBenefits}
+        furnitureTypes={furnitureTypes}
+        isFormSubmitted={isFormSubmitted}
+        onSubmit={handleFormSubmit}
+      />
+      <FooterSection
+        footerColumns={footerColumns}
+        contacts={contacts}
+        socialLinks={socialLinks}
+      />
+    </div>
+  );
+}
+
+export default LandingPage;
