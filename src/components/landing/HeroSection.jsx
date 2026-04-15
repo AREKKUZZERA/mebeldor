@@ -1,17 +1,20 @@
 import {
   motion,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const MotionDiv = motion.div;
+const MotionSpan = motion.span;
 
 function HeroSection({ onScrollToCta }) {
   const heroRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
+  const [scrollPercent, setScrollPercent] = useState("00%");
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -48,6 +51,16 @@ function HeroSection({ onScrollToCta }) {
     [0, 1],
     [0, shouldReduceMotion ? 0 : 120],
   );
+  const scrollIndicatorYRaw = useTransform(
+    scrollYProgress,
+    [0, 0.8, 1],
+    [0, shouldReduceMotion ? 0 : 72, shouldReduceMotion ? 0 : 118],
+  );
+  const scrollIndicatorOpacityRaw = useTransform(
+    scrollYProgress,
+    [0, 0.52, 0.82, 1],
+    [1, 1, shouldReduceMotion ? 1 : 0.22, 0],
+  );
 
   const bgY = useSpring(bgYRaw, { stiffness: 110, damping: 24, mass: 0.35 });
   const bgScale = useSpring(bgScaleRaw, { stiffness: 110, damping: 24, mass: 0.42 });
@@ -64,6 +77,21 @@ function HeroSection({ onScrollToCta }) {
   });
   const orbOneY = useSpring(orbOneYRaw, { stiffness: 90, damping: 22, mass: 0.45 });
   const orbTwoY = useSpring(orbTwoYRaw, { stiffness: 90, damping: 22, mass: 0.45 });
+  const scrollIndicatorY = useSpring(scrollIndicatorYRaw, {
+    stiffness: 85,
+    damping: 20,
+    mass: 0.5,
+  });
+  const scrollIndicatorOpacity = useSpring(scrollIndicatorOpacityRaw, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.45,
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (value) => {
+    const percent = Math.round(value * 100);
+    setScrollPercent(`${percent.toString().padStart(2, "0")}%`);
+  });
 
   return (
     <section id="hero" ref={heroRef}>
@@ -110,13 +138,25 @@ function HeroSection({ onScrollToCta }) {
         </div>
       </MotionDiv>
 
-      <div className="hero-scroll" aria-hidden="true">
+      <MotionDiv
+        className="hero-scroll"
+        aria-hidden="true"
+        style={{
+          y: scrollIndicatorY,
+          opacity: scrollIndicatorOpacity,
+        }}
+      >
         <span className="hero-scroll-label">Scroll</span>
         <div className="hero-scroll-track">
-          <div className="hero-scroll-fill" />
+          <MotionDiv
+            className="hero-scroll-fill"
+            style={{
+              scaleY: useTransform(scrollYProgress, [0, 1], [0.14, 1]),
+            }}
+          />
         </div>
-        <span className="hero-scroll-value">00%</span>
-      </div>
+        <MotionSpan className="hero-scroll-value">{scrollPercent}</MotionSpan>
+      </MotionDiv>
     </section>
   );
 }

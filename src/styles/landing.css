@@ -224,12 +224,26 @@ h1.hero-title {
 h1.hero-title em { font-style: italic; color: var(--gold); }
 .hero-sub {
   font-size: 1rem;
-  color: var(--muted);
+  color: rgba(245,237,224,.88);
   line-height: 1.7;
   max-width: 480px;
+  padding: 1rem 1.2rem 1rem 0;
+  text-shadow: 0 2px 18px rgba(0,0,0,.38);
+  position: relative;
   margin-bottom: 2.8rem;
   opacity: 0; transform: translateY(20px);
   animation: fadeUp .8s .6s var(--ease) forwards;
+}
+.hero-sub::before {
+  content: "";
+  position: absolute;
+  inset: -.75rem -1.1rem -.85rem -1.1rem;
+  background:
+    linear-gradient(90deg, rgba(10,9,5,.42), rgba(10,9,5,.12) 72%, transparent 100%);
+  border: 1px solid rgba(245,237,224,.08);
+  border-radius: 18px;
+  backdrop-filter: blur(6px);
+  z-index: -1;
 }
 .hero-actions {
   display: flex; gap: 1.2rem; flex-wrap: wrap;
@@ -260,7 +274,6 @@ h1.hero-title em { font-style: italic; color: var(--gold); }
 }
 .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
 .hero-scroll {
-  --hero-scroll-progress: 0;
   position: absolute; right: 4rem; bottom: 3.5rem;
   display: flex; flex-direction: column; align-items: center; gap: 1rem;
   min-width: 56px;
@@ -286,10 +299,10 @@ h1.hero-title em { font-style: italic; color: var(--gold); }
   left: 0;
   bottom: 0;
   width: 100%;
-  height: calc(var(--hero-scroll-progress) * 100%);
-  min-height: 18px;
+  height: 100%;
   background: linear-gradient(to top, var(--gold), var(--gold2));
   box-shadow: 0 0 18px rgba(201,169,110,.35);
+  transform-origin: bottom center;
 }
 .hero-scroll-value {
   font-size: .72rem;
@@ -502,7 +515,7 @@ h2.section-title em { font-style: italic; color: var(--gold); }
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--ff-serif);
-  font-size: 1.1rem; color: var(--gold);
+  font-size: 1.6rem; color: var(--gold);
   margin: 0 auto 2rem;
   background: var(--black);
   position: relative; z-index: 1;

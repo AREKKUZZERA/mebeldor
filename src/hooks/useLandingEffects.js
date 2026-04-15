@@ -5,10 +5,6 @@ export function useLandingEffects() {
     const cursor = document.getElementById("cursor");
     const ring = document.getElementById("cursor-ring");
     const navbar = document.getElementById("navbar");
-    const hero = document.getElementById("hero");
-    const stats = document.getElementById("stats");
-    const heroScroll = document.querySelector(".hero-scroll");
-    const heroScrollValue = document.querySelector(".hero-scroll-value");
 
     if (!cursor || !ring || !navbar) {
       return undefined;
@@ -37,29 +33,6 @@ export function useLandingEffects() {
 
     const handleScroll = () => {
       navbar.classList.toggle("scrolled", window.scrollY > 60);
-
-      if (!hero || !stats || !heroScroll || !heroScrollValue) {
-        return;
-      }
-
-      const heroRect = hero.getBoundingClientRect();
-      const statsRect = stats.getBoundingClientRect();
-      const scrolledPastHero = Math.max(-heroRect.top, 0);
-      const heroTravel = Math.max(hero.offsetHeight, 1);
-      const progress = Math.min(scrolledPastHero / heroTravel, 1);
-      const translateY = scrolledPastHero * 1.22;
-      const percent = Math.round(progress * 100);
-      const isHeroVisible = heroRect.bottom > 0 && heroRect.top < window.innerHeight;
-      const heroScrollRect = heroScroll.getBoundingClientRect();
-      const fadeDistance = 120;
-      const overlap = heroScrollRect.bottom - statsRect.top;
-      const fadeProgress = Math.min(Math.max(overlap / fadeDistance, 0), 1);
-      const opacity = 1 - fadeProgress;
-
-      heroScroll.style.transform = `translate3d(0, ${translateY}px, 0)`;
-      heroScroll.style.opacity = isHeroVisible ? `${opacity}` : "0";
-      heroScroll.style.setProperty("--hero-scroll-progress", progress.toString());
-      heroScrollValue.textContent = `${percent.toString().padStart(2, "0")}%`;
     };
 
     const revealObserver = new IntersectionObserver(
