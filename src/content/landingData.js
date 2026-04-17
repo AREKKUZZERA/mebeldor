@@ -7,6 +7,7 @@ import m47 from "../components/assets/photos/phoca_thumb_l_m47-1.jpg";
 import m48 from "../components/assets/photos/phoca_thumb_l_m48-1.jpg";
 import m49 from "../components/assets/photos/phoca_thumb_l_m49-1.jpg";
 import slide1 from "../components/assets/photos/slide1.jpg";
+import slide3 from "../components/assets/photos/slide3.jpg";
 
 export const navigationLinks = [
   { href: "#advantages", label: "О нас" },

@@ -93,7 +93,7 @@
     }
     .hero-bg {
       position: absolute; inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1800&q=80');
+      background-image: url('/mebeldor/photos/slide3.jpg');
       background-size: cover; background-position: center 30%;
     }
     .hero-bg::after {
@@ -723,7 +723,10 @@
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-bg"></div>
+  <<div
+  className="hero-bg"
+  style={{ backgroundImage: `url(${slide3})` }}
+/></div>
   <div class="hero-content">
     <div class="hero-badge">Массив дерева · Ногинск · с 2003 года</div>
     <h1 class="hero-title">Мебель на заказ<br/>под <em>ваш</em> интерьер</h1>

@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { useRef, useState } from "react";
 import { useSmoothNavigation } from "../../hooks/useSmoothNavigation";
+import slide3 from "../assets/photos/slide3.jpg";
 
 const MotionDiv = motion.div;
 const MotionSpan = motion.span;
@@ -17,73 +18,114 @@ function HeroSection({ onScrollToCta }) {
   const shouldReduceMotion = useReducedMotion();
   const [scrollPercent, setScrollPercent] = useState("00%");
   const { handleNavigation } = useSmoothNavigation();
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
 
-  const bgYRaw = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : 120]);
+  const bgYRaw = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, shouldReduceMotion ? 0 : 120]
+  );
+
   const bgScaleRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    [1.05, shouldReduceMotion ? 1.05 : 1.12],
+    [1.05, shouldReduceMotion ? 1.05 : 1.12]
   );
+
   const contentYRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    [0, shouldReduceMotion ? 0 : -56],
+    [0, shouldReduceMotion ? 0 : -56]
   );
+
   const contentOpacityRaw = useTransform(
     scrollYProgress,
     [0, 0.7, 1],
-    [1, shouldReduceMotion ? 1 : 0.92, shouldReduceMotion ? 1 : 0.58],
+    [1, shouldReduceMotion ? 1 : 0.92, shouldReduceMotion ? 1 : 0.58]
   );
+
   const veilOpacityRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    [0.2, shouldReduceMotion ? 0.2 : 0.45],
+    [0.2, shouldReduceMotion ? 0.2 : 0.45]
   );
+
   const orbOneYRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    [0, shouldReduceMotion ? 0 : -90],
+    [0, shouldReduceMotion ? 0 : -90]
   );
+
   const orbTwoYRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    [0, shouldReduceMotion ? 0 : 120],
+    [0, shouldReduceMotion ? 0 : 120]
   );
+
   const scrollIndicatorYRaw = useTransform(
     scrollYProgress,
     [0, 0.8, 1],
-    [0, shouldReduceMotion ? 0 : 72, shouldReduceMotion ? 0 : 118],
+    [0, shouldReduceMotion ? 0 : 72, shouldReduceMotion ? 0 : 118]
   );
+
   const scrollIndicatorOpacityRaw = useTransform(
     scrollYProgress,
     [0, 0.52, 0.82, 1],
-    [1, 1, shouldReduceMotion ? 1 : 0.22, 0],
+    [1, 1, shouldReduceMotion ? 1 : 0.22, 0]
   );
 
-  const bgY = useSpring(bgYRaw, { stiffness: 110, damping: 24, mass: 0.35 });
-  const bgScale = useSpring(bgScaleRaw, { stiffness: 110, damping: 24, mass: 0.42 });
-  const contentY = useSpring(contentYRaw, { stiffness: 120, damping: 26, mass: 0.4 });
+  const bgY = useSpring(bgYRaw, {
+    stiffness: 110,
+    damping: 24,
+    mass: 0.35,
+  });
+
+  const bgScale = useSpring(bgScaleRaw, {
+    stiffness: 110,
+    damping: 24,
+    mass: 0.42,
+  });
+
+  const contentY = useSpring(contentYRaw, {
+    stiffness: 120,
+    damping: 26,
+    mass: 0.4,
+  });
+
   const contentOpacity = useSpring(contentOpacityRaw, {
     stiffness: 120,
     damping: 26,
     mass: 0.45,
   });
+
   const veilOpacity = useSpring(veilOpacityRaw, {
     stiffness: 90,
     damping: 22,
     mass: 0.35,
   });
-  const orbOneY = useSpring(orbOneYRaw, { stiffness: 90, damping: 22, mass: 0.45 });
-  const orbTwoY = useSpring(orbTwoYRaw, { stiffness: 90, damping: 22, mass: 0.45 });
+
+  const orbOneY = useSpring(orbOneYRaw, {
+    stiffness: 90,
+    damping: 22,
+    mass: 0.45,
+  });
+
+  const orbTwoY = useSpring(orbTwoYRaw, {
+    stiffness: 90,
+    damping: 22,
+    mass: 0.45,
+  });
+
   const scrollIndicatorY = useSpring(scrollIndicatorYRaw, {
     stiffness: 85,
     damping: 20,
     mass: 0.5,
   });
+
   const scrollIndicatorOpacity = useSpring(scrollIndicatorOpacityRaw, {
     stiffness: 90,
     damping: 24,
@@ -105,7 +147,10 @@ function HeroSection({ onScrollToCta }) {
             scale: bgScale,
           }}
         >
-          <div className="hero-bg" />
+          <div
+            className="hero-bg"
+            style={{ backgroundImage: `url(${slide3})` }}
+          />
           <MotionDiv className="hero-veil" style={{ opacity: veilOpacity }} />
           <MotionDiv className="hero-orb hero-orb-left" style={{ y: orbOneY }} />
           <MotionDiv className="hero-orb hero-orb-right" style={{ y: orbTwoY }} />
@@ -121,23 +166,34 @@ function HeroSection({ onScrollToCta }) {
         }}
       >
         <div className="hero-badge">Массив дерева · Ногинск · с 2003 года</div>
+
         <h1 className="hero-title">
           Мебель на заказ
           <br />
           под <em>ваш</em> интерьер
         </h1>
+
         <p className="hero-sub">
           Индивидуальный дизайн, собственное производство и бесплатный замер.
           Создаём кухни, шкафы и гардеробные, которые живут вместе с вами.
         </p>
+
         <div className="hero-actions">
           <button className="btn-primary" onClick={onScrollToCta}>
             Рассчитать стоимость
           </button>
+
           <button
             className="btn-outline"
             onClick={() => handleNavigation("/#/galereya")}
-            style={{ background: "none", border: "none", textDecoration: "none", color: "inherit", font: "inherit" }}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              textDecoration: "none",
+              color: "inherit",
+              font: "inherit",
+            }}
           >
             Смотреть работы <span>↓</span>
           </button>
@@ -153,6 +209,7 @@ function HeroSection({ onScrollToCta }) {
         }}
       >
         <span className="hero-scroll-label">Scroll</span>
+
         <div className="hero-scroll-track">
           <MotionDiv
             className="hero-scroll-fill"
@@ -161,6 +218,7 @@ function HeroSection({ onScrollToCta }) {
             }}
           />
         </div>
+
         <MotionSpan className="hero-scroll-value">{scrollPercent}</MotionSpan>
       </MotionDiv>
     </section>
