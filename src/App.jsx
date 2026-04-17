@@ -5,12 +5,14 @@ import ServicesPage from "./components/pages/ServicesPage";
 import OrderPage from "./components/pages/OrderPage";
 import GalleryPage from "./components/pages/GalleryPage";
 import ContactsPage from "./components/pages/ContactsPage";
+import FloatingCallButton from "./components/FloatingCallButton";
 import "./styles/app.css";
 import "./styles/landing.css";
 
 function App() {
   return (
     <HashRouter>
+      <FloatingCallButton />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/o-kompanii" element={<AboutPage />} />
