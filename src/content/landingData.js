@@ -1,3 +1,13 @@
+import home1 from "../components/assets/photos/home1.jpg";
+import decor15 from "../components/assets/photos/phoca_thumb_l_decor15-1.jpg";
+import m31 from "../components/assets/photos/phoca_thumb_l_m31-1.jpg";
+import m32 from "../components/assets/photos/phoca_thumb_l_m32-1.jpg";
+import m46 from "../components/assets/photos/phoca_thumb_l_m46-1.jpg";
+import m47 from "../components/assets/photos/phoca_thumb_l_m47-1.jpg";
+import m48 from "../components/assets/photos/phoca_thumb_l_m48-1.jpg";
+import m49 from "../components/assets/photos/phoca_thumb_l_m49-1.jpg";
+import slide1 from "../components/assets/photos/slide1.jpg";
+
 export const navigationLinks = [
   { href: "#advantages", label: "О нас" },
   { href: "#catalog", label: "Каталог" },
@@ -47,8 +57,7 @@ export const catalogItems = [
     name: "Кухни на заказ",
     description:
       "Из массива дерева, МДФ или пластика. Любые размеры и конфигурации. Встроенная техника, островные решения.",
-    image:
-      "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=900&q=80",
+    image: home1,
     alt: "Кухни на заказ",
   },
   {
@@ -56,8 +65,7 @@ export const catalogItems = [
     name: "Шкафы-купе",
     description:
       "Встроенные и корпусные. Зеркальные фасады, матовое стекло, натуральный шпон. Оптимальное использование пространства.",
-    image:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80",
+    image: m31,
     alt: "Шкафы-купе",
   },
   {
@@ -65,8 +73,7 @@ export const catalogItems = [
     name: "Гардеробные",
     description:
       "Системы хранения любой сложности. Открытые полки, ящики, штанги, подсветка — полная персонализация.",
-    image:
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=900&q=80",
+    image: m32,
     alt: "Гардеробные",
   },
   {
@@ -74,8 +81,7 @@ export const catalogItems = [
     name: "Детская мебель",
     description:
       "Безопасные экологичные материалы. Кровати, столы, стеллажи. Продуманные решения для роста ребенка.",
-    image:
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&q=80",
+    image: m46,
     alt: "Детская мебель",
   },
 ];
@@ -105,28 +111,23 @@ export const processSteps = [
 
 export const galleryItems = [
   {
-    image:
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1000&q=80",
+    image: slide1,
     alt: "Кухня из массива",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1616048056617-93b94a339009?w=600&q=80",
+    image: m47,
     alt: "Шкаф на заказ",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80",
+    image: m48,
     alt: "Гостиная мебель",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80",
+    image: m49,
     alt: "Спальный гарнитур",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1000&q=80",
+    image: decor15,
     alt: "Гардеробная",
   },
 ];

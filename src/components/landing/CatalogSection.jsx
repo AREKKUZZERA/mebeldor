@@ -1,4 +1,8 @@
+import { useSmoothNavigation } from "../../hooks/useSmoothNavigation";
+
 function CatalogSection({ items }) {
+  const { handleNavigation } = useSmoothNavigation();
+
   return (
     <section id="catalog">
       <div className="catalog-header">
@@ -8,9 +12,13 @@ function CatalogSection({ items }) {
             Каталог <em>изделий</em>
           </h2>
         </div>
-        <a href="#cta" className="btn-outline reveal" style={{ alignSelf: "flex-end" }}>
+        <button
+          onClick={() => handleNavigation("/#/kontakty")}
+          className="btn-outline reveal"
+          style={{ alignSelf: "flex-end", background: "none", border: "none", cursor: "pointer", color: "inherit", font: "inherit" }}
+        >
           Заказать проект
-        </a>
+        </button>
       </div>
       <div className="catalog-grid">
         {items.map((item, index) => (

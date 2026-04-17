@@ -7,6 +7,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useRef, useState } from "react";
+import { useSmoothNavigation } from "../../hooks/useSmoothNavigation";
 
 const MotionDiv = motion.div;
 const MotionSpan = motion.span;
@@ -15,6 +16,7 @@ function HeroSection({ onScrollToCta }) {
   const heroRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
   const [scrollPercent, setScrollPercent] = useState("00%");
+  const { handleNavigation } = useSmoothNavigation();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -132,9 +134,13 @@ function HeroSection({ onScrollToCta }) {
           <button className="btn-primary" onClick={onScrollToCta}>
             Рассчитать стоимость
           </button>
-          <a href="#catalog" className="btn-outline">
+          <button
+            className="btn-outline"
+            onClick={() => handleNavigation("/#/galereya")}
+            style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "none", color: "inherit", font: "inherit" }}
+          >
             Смотреть работы <span>↓</span>
-          </a>
+          </button>
         </div>
       </MotionDiv>
 

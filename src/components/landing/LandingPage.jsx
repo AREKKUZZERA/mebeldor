@@ -1,21 +1,12 @@
 import { useState } from "react";
 import {
-  advantages,
-  catalogItems,
-  contacts,
-  ctaBenefits,
-  footerColumns,
-  furnitureTypes,
-  galleryItems,
-  mobileNavigationLinks,
-  navigationLinks,
-  processSteps,
-  reviews,
-  socialLinks,
-  stats,
-  trustMetrics,
+  advantages, catalogItems, contacts, ctaBenefits,
+  footerColumns, furnitureTypes, galleryItems,
+  mobileNavigationLinks, navigationLinks,
+  processSteps, reviews, socialLinks, stats, trustMetrics,
 } from "../../content/landingData";
 import { useLandingEffects } from "../../hooks/useLandingEffects";
+import { useHashScroll } from "../../hooks/useHashScroll";
 import AdvantagesSection from "./AdvantagesSection";
 import CatalogSection from "./CatalogSection";
 import CtaSection from "./CtaSection";
@@ -34,18 +25,13 @@ function LandingPage() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   useLandingEffects();
+  useHashScroll();
 
   const scrollToCta = () => {
-    document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
-  };
-
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    setIsFormSubmitted(true);
+    setTimeout(() => {
+      document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
   };
 
   return (
@@ -54,12 +40,14 @@ function LandingPage() {
       <MobileMenu
         isOpen={isMobileMenuOpen}
         links={mobileNavigationLinks}
-        onClose={closeMobileMenu}
+        onClose={() => setIsMobileMenuOpen(false)}
+        onScrollToCta={scrollToCta}
       />
       <Navbar
         links={navigationLinks}
         onOpenMenu={() => setIsMobileMenuOpen(true)}
         onScrollToCta={scrollToCta}
+        isMobileMenuOpen={isMobileMenuOpen}
       />
       <HeroSection onScrollToCta={scrollToCta} />
       <StatsSection stats={stats} />
@@ -72,7 +60,7 @@ function LandingPage() {
         benefits={ctaBenefits}
         furnitureTypes={furnitureTypes}
         isFormSubmitted={isFormSubmitted}
-        onSubmit={handleFormSubmit}
+        onSubmit={(e) => { e.preventDefault(); setIsFormSubmitted(true); }}
       />
       <FooterSection
         footerColumns={footerColumns}

@@ -1,23 +1,24 @@
+import { useSmoothNavigation } from "../../hooks/useSmoothNavigation";
+
 function GallerySection({ items }) {
+  const { handleNavigation } = useSmoothNavigation();
+
   return (
     <section id="gallery">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          marginBottom: "3rem",
-        }}
-      >
+      <div className="gallery-head">
         <div>
           <div className="section-tag reveal">Галерея работ</div>
           <h2 className="section-title reveal">
             Наши <em>проекты</em>
           </h2>
         </div>
-        <a href="#cta" className="btn-outline reveal">
+        <button
+          onClick={() => handleNavigation("/#/kontakty")}
+          className="btn-outline reveal"
+          style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", font: "inherit" }}
+        >
           Хочу так же
-        </a>
+        </button>
       </div>
       <div className="gallery-grid">
         {items.map((item, index) => (

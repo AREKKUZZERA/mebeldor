@@ -6,35 +6,14 @@ export function useLandingEffects() {
     const ring = document.getElementById("cursor-ring");
     const navbar = document.getElementById("navbar");
 
-    if (!cursor || !ring || !navbar) {
-      return undefined;
-    }
+    if (!navbar) return undefined;
 
-    let mouseX = 0;
-    let mouseY = 0;
-    let ringX = 0;
-    let ringY = 0;
-    let ringFrameId = 0;
-
-    const handleMouseMove = (event) => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
-      cursor.style.left = `${mouseX}px`;
-      cursor.style.top = `${mouseY}px`;
-    };
-
-    const animateRing = () => {
-      ringX += (mouseX - ringX) * 0.12;
-      ringY += (mouseY - ringY) * 0.12;
-      ring.style.left = `${ringX}px`;
-      ring.style.top = `${ringY}px`;
-      ringFrameId = window.requestAnimationFrame(animateRing);
-    };
-
+    // Scroll handler for navbar
     const handleScroll = () => {
       navbar.classList.toggle("scrolled", window.scrollY > 60);
     };
 
+    // Reveal observer
     const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -44,66 +23,79 @@ export function useLandingEffects() {
           }
         });
       },
-      { threshold: 0.12 },
+      { threshold: 0.1 },
     );
 
+    // Count animation
     const animateCount = (element, target, suffix = "") => {
-      const duration = 1800;
+      const duration = 1600;
       let startTime = 0;
-
       const step = (timestamp) => {
-        if (!startTime) {
-          startTime = timestamp;
-        }
-
+        if (!startTime) startTime = timestamp;
         const progress = Math.min((timestamp - startTime) / duration, 1);
-        const value = Math.floor(progress * target);
-        element.textContent = `${value.toLocaleString("ru-RU")}${suffix}`;
-
-        if (progress < 1) {
-          window.requestAnimationFrame(step);
-        }
+        const eased = 1 - Math.pow(1 - progress, 3);
+        element.textContent = `${Math.floor(eased * target).toLocaleString("ru-RU")}${suffix}`;
+        if (progress < 1) window.requestAnimationFrame(step);
       };
-
       window.requestAnimationFrame(step);
     };
 
     const countObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) {
-            return;
-          }
-
-          const element = entry.target;
-          const target = Number.parseInt(element.dataset.count ?? "0", 10);
-          const suffix =
-            element.textContent?.includes("+") || target > 100 ? "+" : "";
-
-          animateCount(element, target, suffix);
-          countObserver.unobserve(element);
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = parseInt(el.dataset.count ?? "0", 10);
+          const suffix = el.textContent?.includes("+") || target > 100 ? "+" : "";
+          animateCount(el, target, suffix);
+          countObserver.unobserve(el);
         });
       },
       { threshold: 0.5 },
     );
 
-    document.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    document.querySelectorAll(".reveal").forEach((element) => {
-      revealObserver.observe(element);
-    });
-
-    document.querySelectorAll("[data-count]").forEach((element) => {
-      countObserver.observe(element);
-    });
-
-    animateRing();
     handleScroll();
 
+    const allReveal = document.querySelectorAll(".reveal");
+    allReveal.forEach((el) => revealObserver.observe(el));
+
+    const allCount = document.querySelectorAll("[data-count]");
+    allCount.forEach((el) => countObserver.observe(el));
+
+    // Cursor — only on non-touch devices
+    let frameId = 0;
+    const isTouchDevice = window.matchMedia("(hover: none)").matches;
+
+    if (cursor && ring && !isTouchDevice) {
+      let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+      const onMove = (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = `${mouseX}px`;
+        cursor.style.top = `${mouseY}px`;
+      };
+      const animate = () => {
+        ringX += (mouseX - ringX) * 0.12;
+        ringY += (mouseY - ringY) * 0.12;
+        ring.style.left = `${ringX}px`;
+        ring.style.top = `${ringY}px`;
+        frameId = requestAnimationFrame(animate);
+      };
+      document.addEventListener("mousemove", onMove);
+      animate();
+
+      return () => {
+        cancelAnimationFrame(frameId);
+        document.removeEventListener("mousemove", onMove);
+        window.removeEventListener("scroll", handleScroll);
+        revealObserver.disconnect();
+        countObserver.disconnect();
+      };
+    }
+
     return () => {
-      window.cancelAnimationFrame(ringFrameId);
-      document.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(frameId);
       window.removeEventListener("scroll", handleScroll);
       revealObserver.disconnect();
       countObserver.disconnect();
