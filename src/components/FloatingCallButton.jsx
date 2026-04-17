@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "../styles/floating-call-button.css";
 
 const PHONE_NUMBER = "+7 (916) 754-03-37";
@@ -9,7 +9,7 @@ function FloatingCallButton() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -35,7 +35,15 @@ function FloatingCallButton() {
   };
 
   const handleLeaveRequest = () => {
-    window.location.href = "/#/?scroll=cta";
+    // If on home page, scroll to CTA; otherwise navigate to home and scroll
+    if (location.pathname === "/") {
+      const ctaSection = document.getElementById("cta");
+      if (ctaSection) {
+        ctaSection.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      window.location.href = "/#/?scroll=cta";
+    }
   };
 
   return (
