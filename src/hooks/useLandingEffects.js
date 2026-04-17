@@ -2,8 +2,6 @@ import { useEffect } from "react";
 
 export function useLandingEffects() {
   useEffect(() => {
-    const cursor = document.getElementById("cursor");
-    const ring = document.getElementById("cursor-ring");
     const navbar = document.getElementById("navbar");
 
     if (!navbar) return undefined;

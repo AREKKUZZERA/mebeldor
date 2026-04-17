@@ -45,15 +45,6 @@
       transition: width .3s var(--ease), height .3s var(--ease), background .3s;
       mix-blend-mode: difference;
     }
-    #cursor-ring {
-      position: fixed; top: 0; left: 0; z-index: 9998;
-      width: 36px; height: 36px;
-      border: 1px solid rgba(201,169,110,0.5);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%,-50%);
-      transition: transform .12s var(--ease), width .3s var(--ease), height .3s var(--ease);
-    }
     body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; }
 
     /* ── SCROLLBAR ── */
@@ -720,9 +711,6 @@
 </head>
 <body>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-close" id="mobileClose" aria-label="Закрыть">✕</button>
@@ -1120,19 +1108,6 @@
 </footer>
 
 <script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursor-ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
-  function animRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx+'px'; ring.style.top = ry+'px';
-    requestAnimationFrame(animRing);
-  }
-  animRing();
-
   // Nav scroll
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
