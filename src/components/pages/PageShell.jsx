@@ -38,7 +38,7 @@ function PageShell({ children, heroTitle, heroSub, heroImg }) {
       <CursorLayer />
       <MobileMenu
         isOpen={isMobileMenuOpen}
-        links={HOME_NAV_LINKS}
+        links={PAGE_LINKS}
         onClose={() => setIsMobileMenuOpen(false)}
         onScrollToCta={() => setIsMobileMenuOpen(false)}
       />

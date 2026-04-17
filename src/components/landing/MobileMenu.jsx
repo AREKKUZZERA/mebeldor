@@ -86,16 +86,16 @@ function MobileMenu({ isOpen, links, onClose, onScrollToCta }) {
                   {link.label}
                 </a>
               ))
-            : MOBILE_PAGES.map((page, i) => (
+            : links.map((link, i) => (
                 <Link
-                  key={page.to}
-                  to={page.to}
-                  className={`mobile-link ${location.pathname === page.to ? "active" : ""}`}
+                  key={link.to || link.href}
+                  to={link.to}
+                  className={`mobile-link ${location.pathname === link.to ? "active" : ""}`}
                   style={{ "--i": i }}
                   onClick={onClose}
                 >
                   <span className="mobile-link-num">0{i + 1}</span>
-                  {page.label}
+                  {link.label}
                 </Link>
               ))}
         </nav>
