@@ -15,7 +15,7 @@ function CatalogSection({ items }) {
         <button
           onClick={() => handleNavigation("/#/kontakty")}
           className="btn-outline reveal"
-          style={{ alignSelf: "flex-end", background: "none", border: "none", cursor: "pointer", color: "inherit", font: "inherit" }}
+          style={{ alignSelf: "flex-end", background: "none", border: "none", color: "inherit", font: "inherit" }}
         >
           Заказать проект
         </button>

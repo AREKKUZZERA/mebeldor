@@ -137,7 +137,7 @@ function HeroSection({ onScrollToCta }) {
           <button
             className="btn-outline"
             onClick={() => handleNavigation("/#/galereya")}
-            style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "none", color: "inherit", font: "inherit" }}
+            style={{ background: "none", border: "none", textDecoration: "none", color: "inherit", font: "inherit" }}
           >
             Смотреть работы <span>↓</span>
           </button>

@@ -15,7 +15,7 @@ function GallerySection({ items }) {
         <button
           onClick={() => handleNavigation("/#/kontakty")}
           className="btn-outline reveal"
-          style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", font: "inherit" }}
+          style={{ background: "none", border: "none", color: "inherit", font: "inherit" }}
         >
           Хочу так же
         </button>

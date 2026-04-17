@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MobileMenu from "../landing/MobileMenu";
-import CursorLayer from "../landing/CursorLayer";
 import FooterSection from "../landing/FooterSection";
 import { contacts, socialLinks } from "../../content/landingData";
 import { useLandingEffects } from "../../hooks/useLandingEffects";
@@ -35,7 +34,6 @@ function PageShell({ children, heroTitle, heroSub, heroImg }) {
 
   return (
     <div className="landing-shell">
-      <CursorLayer />
       <MobileMenu
         isOpen={isMobileMenuOpen}
         links={PAGE_LINKS}

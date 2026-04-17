@@ -10,7 +10,6 @@ import { useHashScroll } from "../../hooks/useHashScroll";
 import AdvantagesSection from "./AdvantagesSection";
 import CatalogSection from "./CatalogSection";
 import CtaSection from "./CtaSection";
-import CursorLayer from "./CursorLayer";
 import FooterSection from "./FooterSection";
 import GallerySection from "./GallerySection";
 import HeroSection from "./HeroSection";
@@ -36,7 +35,6 @@ function LandingPage() {
 
   return (
     <div className="landing-shell">
-      <CursorLayer />
       <MobileMenu
         isOpen={isMobileMenuOpen}
         links={mobileNavigationLinks}

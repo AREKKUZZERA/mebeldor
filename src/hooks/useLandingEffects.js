@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useEffect } from "react";
 
 export function useLandingEffects() {
@@ -61,39 +62,7 @@ export function useLandingEffects() {
     const allCount = document.querySelectorAll("[data-count]");
     allCount.forEach((el) => countObserver.observe(el));
 
-    // Cursor — only on non-touch devices
-    let frameId = 0;
-    const isTouchDevice = window.matchMedia("(hover: none)").matches;
-
-    if (cursor && ring && !isTouchDevice) {
-      let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-      const onMove = (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursor.style.left = `${mouseX}px`;
-        cursor.style.top = `${mouseY}px`;
-      };
-      const animate = () => {
-        ringX += (mouseX - ringX) * 0.12;
-        ringY += (mouseY - ringY) * 0.12;
-        ring.style.left = `${ringX}px`;
-        ring.style.top = `${ringY}px`;
-        frameId = requestAnimationFrame(animate);
-      };
-      document.addEventListener("mousemove", onMove);
-      animate();
-
-      return () => {
-        cancelAnimationFrame(frameId);
-        document.removeEventListener("mousemove", onMove);
-        window.removeEventListener("scroll", handleScroll);
-        revealObserver.disconnect();
-        countObserver.disconnect();
-      };
-    }
-
     return () => {
-      cancelAnimationFrame(frameId);
       window.removeEventListener("scroll", handleScroll);
       revealObserver.disconnect();
       countObserver.disconnect();
